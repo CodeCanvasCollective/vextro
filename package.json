@@ -1,7 +1,7 @@
 {
   "name": "create-vextro",
   "version": "0.1.0",
-  "description": "Scaffold modern Chrome extensions with Vite + React + Tailwind",
+  "description": "Scaffold modern browser extensions (Chrome, Edge, Firefox) with Vite + React + Tailwind",
   "type": "module",
   "bin": {
     "create-vextro": "./dist/index.js"
