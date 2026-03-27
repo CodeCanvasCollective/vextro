@@ -25,7 +25,7 @@
 | ----------- | ------------------ | ----------- | ----------------------------------------------------------------- |
 | **Chrome**  | ✅ Fully supported | `--chrome`  | Uses CRXJS Vite Plugin                                            |
 | **Edge**    | ✅ Fully supported | `--chrome`  | Chromium-based — same as Chrome, load from `edge://extensions`    |
-| **Firefox** | ✅ Fully supported | `--firefox` | Uses vite-plugin-web-extension + `browser.*` namespace            |
+| **Firefox** | ✅ Fully supported | `--firefox` | Uses vite-plugin-web-extension + `chrome.*` namespace             |
 | **Safari**  | 📄 Documented      | —           | Convert Chrome output with `xcrun safari-web-extension-converter` |
 
 ---
