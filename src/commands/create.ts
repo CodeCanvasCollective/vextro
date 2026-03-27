@@ -106,7 +106,9 @@ async function handleCreate(
   process.removeListener('SIGINT', cleanup);
 
   newLine();
-  success(`Vextro project "${config.name}" created successfully for ${browserMeta.displayName}! 🎉`);
+  success(
+    `Vextro project "${config.name}" created successfully for ${browserMeta.displayName}! 🎉`,
+  );
   newLine();
   console.log('Next steps:');
   console.log(`  cd ${config.name}`);

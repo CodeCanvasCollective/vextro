@@ -9,10 +9,7 @@ export default defineConfig({
     react(),
     webExtension({
       manifest: path.resolve(__dirname, 'src/manifest.json'),
-      additionalInputs: [
-        'src/popup/popup.html',
-        'src/options/options.html',
-      ],
+      additionalInputs: ['src/popup/popup.html', 'src/options/options.html'],
     }),
     tailwindcss(),
   ],

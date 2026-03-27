@@ -21,12 +21,12 @@
 
 ## 🌐 Browser Support
 
-| Browser | Status | Flag | Notes |
-|---------|--------|------|-------|
-| **Chrome** | ✅ Fully supported | `--chrome` | Uses CRXJS Vite Plugin |
-| **Edge** | ✅ Fully supported | `--chrome` | Chromium-based — same as Chrome, load from `edge://extensions` |
-| **Firefox** | ✅ Fully supported | `--firefox` | Uses vite-plugin-web-extension + `browser.*` namespace |
-| **Safari** | 📄 Documented | — | Convert Chrome output with `xcrun safari-web-extension-converter` |
+| Browser     | Status             | Flag        | Notes                                                             |
+| ----------- | ------------------ | ----------- | ----------------------------------------------------------------- |
+| **Chrome**  | ✅ Fully supported | `--chrome`  | Uses CRXJS Vite Plugin                                            |
+| **Edge**    | ✅ Fully supported | `--chrome`  | Chromium-based — same as Chrome, load from `edge://extensions`    |
+| **Firefox** | ✅ Fully supported | `--firefox` | Uses vite-plugin-web-extension + `browser.*` namespace            |
+| **Safari**  | 📄 Documented      | —           | Convert Chrome output with `xcrun safari-web-extension-converter` |
 
 ---
 
@@ -53,16 +53,19 @@ npm run dev
 ### Loading your extension
 
 **Chrome / Edge:**
+
 1. Open `chrome://extensions` (or `edge://extensions`)
 2. Enable **Developer mode**
 3. Click **"Load unpacked"** → select the `dist/` folder
 
 **Firefox:**
+
 1. Open `about:debugging#/runtime/this-firefox`
 2. Click **"Load Temporary Add-on"**
 3. Select any file in the `dist/` folder
 
 **Safari (macOS only):**
+
 1. Build a Chrome extension first using `--chrome`
 2. Run `xcrun safari-web-extension-converter dist/` to create an Xcode project
 3. Build and run from Xcode
@@ -87,16 +90,16 @@ create-vextro --verbose                  # Enable verbose output
 
 Every generated project includes:
 
-| Feature | Description |
-|---------|-------------|
-| **Popup** | React popup with `chrome.storage` demo |
-| **Options page** | Settings page with save/load via storage sync |
-| **Background** | Service worker with `onInstalled` and message listener |
-| **Content script** | Injected script with background messaging example |
-| **Storage utils** | Typed wrapper around browser storage API |
-| **Hot Reload** | Vite HMR for popup and options pages |
-| **TypeScript** | Full type safety |
-| **Tailwind CSS** | Utility-first styling pre-configured |
+| Feature            | Description                                            |
+| ------------------ | ------------------------------------------------------ |
+| **Popup**          | React popup with `chrome.storage` demo                 |
+| **Options page**   | Settings page with save/load via storage sync          |
+| **Background**     | Service worker with `onInstalled` and message listener |
+| **Content script** | Injected script with background messaging example      |
+| **Storage utils**  | Typed wrapper around browser storage API               |
+| **Hot Reload**     | Vite HMR for popup and options pages                   |
+| **TypeScript**     | Full type safety                                       |
+| **Tailwind CSS**   | Utility-first styling pre-configured                   |
 
 ---
 

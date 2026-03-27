@@ -30,10 +30,10 @@ export class ExtensionGenerator {
     const s = spinner('Creating base Vite + React + TS project...');
     s.start();
     try {
-      execSync(
-        `npm create vite@latest ${this.config.name} -- --template react-ts`,
-        { cwd: path.dirname(this.config.targetDir), stdio: 'pipe' },
-      );
+      execSync(`npm create vite@latest ${this.config.name} -- --template react-ts`, {
+        cwd: path.dirname(this.config.targetDir),
+        stdio: 'pipe',
+      });
       s.stop();
       success('Created base Vite + React + TS project');
     } catch (err) {
@@ -206,8 +206,7 @@ export class ExtensionGenerator {
   }
 
   private async installExtensionDeps(): Promise<void> {
-    const deps =
-      this.config.browser === 'firefox' ? FIREFOX_DEV_DEPS : CHROME_DEV_DEPS;
+    const deps = this.config.browser === 'firefox' ? FIREFOX_DEV_DEPS : CHROME_DEV_DEPS;
 
     const s = spinner(`Installing ${this.config.browser} extension dev dependencies...`);
     s.start();

@@ -22,9 +22,7 @@ export default function App() {
 
         {/* Greeting Setting */}
         <div className="bg-white rounded-lg shadow p-6 mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Greeting Message
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Greeting Message</label>
           <input
             type="text"
             value={greeting}
@@ -46,9 +44,7 @@ export default function App() {
         </button>
 
         {saved && (
-          <span className="ml-3 text-green-600 text-sm font-medium">
-            ✔ Saved successfully!
-          </span>
+          <span className="ml-3 text-green-600 text-sm font-medium">✔ Saved successfully!</span>
         )}
 
         {/* Info */}
@@ -64,7 +60,8 @@ export default function App() {
             >
               create-vextro
             </a>
-            . Edit this page in <code className="bg-blue-100 px-1 rounded">src/options/App.tsx</code>.
+            . Edit this page in{' '}
+            <code className="bg-blue-100 px-1 rounded">src/options/App.tsx</code>.
           </p>
         </div>
       </div>
