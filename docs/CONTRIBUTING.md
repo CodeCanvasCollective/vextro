@@ -58,7 +58,7 @@ src/
 └── types/
     └── index.ts          # TypeScript interfaces
 
-extension-structure/      # Template files copied into new projects
+src/templates/            # Template files copied into new projects
 tests/                    # Unit tests (vitest)
 ```
 
