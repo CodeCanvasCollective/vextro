@@ -14,6 +14,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', 'extension-structure/', 'vitest.config.ts', 'tsup.config.ts'],
+    ignores: ['dist/', 'node_modules/', 'src/templates/', 'vitest.config.ts', 'tsup.config.ts'],
   },
 );

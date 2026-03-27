@@ -11,7 +11,7 @@ import {
   newLine,
   banner,
 } from '../utils/index.js';
-import { DEFAULT_BROWSER, BROWSERS } from '../constants.js';
+import { BROWSERS } from '../constants.js';
 import type { CreateOptions, ProjectConfig, BrowserTarget } from '../types/index.js';
 
 export function createCommand(): Command {
