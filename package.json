@@ -1,24 +1,62 @@
 {
   "name": "create-vextro",
-  "version": "0.0.4",
-  "description": "Scaffold modern Chrome extensions with Vite + React + Tailwind",
-  "bin": {
-    "create-vextro": "bin/cli.js"
-  },
+  "version": "0.1.0",
+  "description": "Scaffold modern browser extensions (Chrome, Edge, Firefox) with Vite + React + Tailwind",
   "type": "module",
+  "bin": {
+    "create-vextro": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm run build && npm test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.8",
+    "ora": "^8.0.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.3.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^2.0.0"
+  },
   "files": [
-    "bin",
-    "extension-structure/"
+    "dist",
+    "src/templates"
   ],
   "keywords": [
     "vite",
     "chrome-extension",
+    "firefox-extension",
+    "browser-extension",
     "vite-plugin",
     "react",
     "tailwind",
     "crxjs",
     "manifest-v3",
-    "scaffold"
+    "scaffold",
+    "cli",
+    "generator",
+    "starter-kit"
   ],
   "repository": {
     "type": "git",
@@ -29,13 +67,5 @@
   "bugs": {
     "url": "https://github.com/lasalasa/vextro/issues"
   },
-  "homepage": "https://github.com/lasalasa/vextro#readme",
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "fs-extra": "^11.2.0",
-    "inquirer": "^9.2.8"
-  },
-  "engines": {
-    "node": ">=16"
-  }
+  "homepage": "https://github.com/lasalasa/vextro#readme"
 }
