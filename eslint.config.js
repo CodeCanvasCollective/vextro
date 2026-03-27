@@ -1,7 +1,7 @@
-import tseslint from "typescript-eslint";
-import { fileURLToPath } from "node:url";
+import tseslint from 'typescript-eslint';
+import { fileURLToPath } from 'node:url';
 
-const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -14,19 +14,10 @@ export default [
       },
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_" },
-      ],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
   {
-    ignores: [
-      "dist/",
-      "node_modules/",
-      "src/templates/",
-      "vitest.config.ts",
-      "tsup.config.ts",
-    ],
+    ignores: ['dist/', 'node_modules/', 'src/templates/', 'vitest.config.ts', 'tsup.config.ts'],
   },
 ];

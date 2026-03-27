@@ -33,6 +33,7 @@ export class ExtensionGenerator {
       execSync(`npm create vite@latest ${this.config.name} -- --template react-ts`, {
         cwd: path.dirname(this.config.targetDir),
         stdio: 'pipe',
+        maxBuffer: 10 * 1024 * 1024,
       });
       s.stop();
       success('Created base Vite + React + TS project');
@@ -48,7 +49,11 @@ export class ExtensionGenerator {
     const s = spinner('Installing base dependencies...');
     s.start();
     try {
-      execSync('npm install', { cwd: this.config.targetDir, stdio: 'pipe' });
+      execSync('npm install', {
+        cwd: this.config.targetDir,
+        stdio: 'pipe',
+        maxBuffer: 10 * 1024 * 1024,
+      });
       s.stop();
       success('Installed base dependencies');
     } catch (err) {
@@ -214,6 +219,7 @@ export class ExtensionGenerator {
       execSync(`npm install --save-dev ${deps.join(' ')}`, {
         cwd: this.config.targetDir,
         stdio: 'pipe',
+        maxBuffer: 10 * 1024 * 1024,
       });
       s.stop();
       success(`Installed ${this.config.browser} extension dev dependencies`);
