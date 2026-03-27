@@ -1,72 +1,61 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getStorageValue, setStorageValue } from '../utils/storage';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'load' | 'generate'>('load');
+  const [count, setCount] = useState(0);
+  const [greeting, setGreeting] = useState('');
+
+  useEffect(() => {
+    // Load saved count from chrome.storage
+    getStorageValue<number>('clickCount', 0).then(setCount);
+    getStorageValue<string>('greeting', 'Hello from Vextro!').then(setGreeting);
+  }, []);
+
+  const handleClick = async () => {
+    const newCount = count + 1;
+    setCount(newCount);
+    await setStorageValue('clickCount', newCount);
+  };
 
   const openOptionsPage = () => {
     chrome.runtime.openOptionsPage();
   };
 
   return (
-    <div className="w-[320px] min-h-[280px] p-4 bg-gray-900 text-white font-sans">
-      {/* Brand Header */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="w-[320px] min-h-[280px] p-5 bg-gray-900 text-white font-sans">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-2">
           <img src="/icon.png" alt="Vextro Logo" className="w-6 h-6" />
           <h1 className="text-lg font-semibold">Vextro</h1>
         </div>
         <button
           onClick={openOptionsPage}
-          className="text-sm text-blue-400 hover:underline"
+          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
         >
-          Options
+          ⚙️ Settings
         </button>
       </div>
 
-      {/* Tab Buttons */}
-      <div className="flex justify-around mb-4">
+      {/* Greeting */}
+      <p className="text-sm text-gray-400 mb-4">{greeting}</p>
+
+      {/* Counter Demo */}
+      <div className="bg-gray-800 p-4 rounded-lg text-center">
+        <p className="text-sm text-gray-400 mb-2">Clicks (synced via chrome.storage)</p>
+        <p className="text-3xl font-bold text-blue-400 mb-3">{count}</p>
         <button
-          className={`px-4 py-1 rounded-md ${
-            activeTab === 'load' ? 'bg-blue-500' : 'bg-gray-700'
-          }`}
-          onClick={() => setActiveTab('load')}
+          onClick={handleClick}
+          className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-colors py-2 px-4 rounded-md font-medium"
         >
-          Load Config
-        </button>
-        <button
-          className={`px-4 py-1 rounded-md ${
-            activeTab === 'generate' ? 'bg-blue-500' : 'bg-gray-700'
-          }`}
-          onClick={() => setActiveTab('generate')}
-        >
-          Generate
+          Click Me
         </button>
       </div>
 
-      {/* Tab Content */}
-      <div className="bg-gray-800 p-3 rounded-md">
-        {activeTab === 'load' ? (
-          <div>
-            <label className="block text-sm mb-2">Select Config</label>
-            <select className="w-full p-2 bg-gray-700 rounded text-white">
-              <option>Default</option>
-              <option>Custom 1</option>
-            </select>
-          </div>
-        ) : (
-          <div>
-            <label className="block text-sm mb-2">Generate New Config</label>
-            <input
-              type="text"
-              placeholder="Enter key name"
-              className="w-full p-2 bg-gray-700 rounded text-white"
-            />
-            <button className="mt-3 w-full bg-green-600 hover:bg-green-700 py-2 rounded">
-              Generate
-            </button>
-          </div>
-        )}
-      </div>
+      {/* Footer */}
+      <p className="text-xs text-gray-600 text-center mt-4">
+        Built with Vextro — Vite + React + Tailwind
+      </p>
     </div>
   );
 }

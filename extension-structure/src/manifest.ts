@@ -3,7 +3,7 @@ import { defineManifest } from '@crxjs/vite-plugin';
 export default defineManifest({
   manifest_version: 3,
   name: "__EXT_NAME__",
-  description: "A modern Chrome extension powered by Extensify.",
+  description: "A modern Chrome extension built with Vextro.",
   version: "1.0.0",
   icons: {
     "16": "icons/icon16.png",

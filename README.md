@@ -1,5 +1,6 @@
 # create-vextro
 
+[![CI](https://github.com/lasalasa/vextro/actions/workflows/ci.yml/badge.svg)](https://github.com/lasalasa/vextro/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/create-vextro?color=blue&style=flat-square)](https://www.npmjs.com/package/create-vextro)
 [![npm downloads](https://img.shields.io/npm/dt/create-vextro?style=flat-square)](https://www.npmjs.com/package/create-vextro)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://github.com/lasalasa/vextro/blob/main/LICENSE)
@@ -8,7 +9,7 @@
 
 > Scaffold a modern Chrome extension powered by Vite + React + Tailwind in seconds.
 
-**Vextro** is a starter toolkit designed for building fast, modern Chrome extensions using:
+**Vextro** is a CLI tool for building fast, modern Chrome extensions using:
 
 - ⚡ [Vite](https://vitejs.dev/)
 - ⚛️ [React + TypeScript](https://reactjs.org/)
@@ -18,34 +19,32 @@
 
 ---
 
-## 🚀 Getting Started
-
-You can scaffold a new extension using one of the following commands:
-
-### With **npm**
-```bash
-npm create vextro@latest
-````
-
-### With **Yarn**
+## 🚀 Quick Start
 
 ```bash
-yarn create vextro
+npx create-vextro create my-extension
 ```
 
-### With **pnpm**
+Or skip the prompt by passing the project name directly:
 
 ```bash
-pnpm create vextro
+npx create-vextro create my-extension
 ```
 
-### With **Bun**
+### With other package managers
 
 ```bash
-bun create vextro
+# Yarn
+yarn create vextro create my-extension
+
+# pnpm
+pnpm create vextro create my-extension
+
+# Bun
+bun create vextro create my-extension
 ```
 
-Then follow the prompt to choose your project name:
+Then:
 
 ```bash
 cd my-extension
@@ -53,23 +52,54 @@ npm install
 npm run dev
 ```
 
-Finally, open Chrome and load your extension from the `dist/` folder via `chrome://extensions`.
+Open Chrome and load your extension from the `dist/` folder via `chrome://extensions`.
 
 ---
 
-## 📁 Example Folder Structure
+## 📋 Commands
+
+```bash
+create-vextro create <name>          # Create a new extension
+create-vextro create <name> --force  # Overwrite existing directory
+create-vextro --version              # Show version
+create-vextro --help                 # Show help
+create-vextro --verbose              # Enable verbose output
+```
+
+---
+
+## ✨ What You Get
+
+Every generated project includes:
+
+| Feature | Description |
+|---------|-------------|
+| **Popup** | React popup with `chrome.storage` demo |
+| **Options page** | Settings page with save/load via `chrome.storage.sync` |
+| **Background** | Service worker with `onInstalled` and message listener |
+| **Content script** | Injected script with background messaging example |
+| **Storage utils** | Typed wrapper around `chrome.storage.sync` |
+| **Hot Reload** | Vite HMR for popup and options pages |
+| **TypeScript** | Full type safety with `@types/chrome` |
+| **Tailwind CSS** | Utility-first styling pre-configured |
+
+---
+
+## 📁 Generated Project Structure
 
 ```
 my-extension/
-├── public/                 # Static assets (optional)
+├── public/
+│   ├── icon.png
+│   └── icons/              # Extension icons (16, 48, 128)
 ├── src/
 │   ├── background/         # Background service worker
 │   ├── content/            # Content scripts
 │   ├── options/            # Options page (React + Tailwind)
 │   ├── popup/              # Popup UI (React + Tailwind)
+│   ├── utils/              # Storage utilities
 │   ├── manifest.ts         # Typed manifest config
-│   ├── styles.css          # Tailwind CSS entrypoint
-│   └── utils/              # Utility scripts
+│   └── styles.css          # Tailwind CSS entrypoint
 ├── vite.config.ts          # Vite + CRX plugin config
 ├── tsconfig.json
 └── package.json
@@ -79,11 +109,18 @@ my-extension/
 
 ## 🌟 Features
 
-* ⚡ Instant startup with Vite
-* 🔥 Hot Module Reload (HMR) for popup and options
-* 🧩 Multi-entry support with `@crxjs/vite-plugin`
-* 🛠️ Preconfigured React + TypeScript + Tailwind
-* 🧱 Opinionated folder structure
+- ⚡ Instant startup with Vite
+- 🔥 Hot Module Reload (HMR) for popup and options
+- 🧩 Multi-entry support with `@crxjs/vite-plugin`
+- 🛠️ Preconfigured React + TypeScript + Tailwind
+- 🧱 Opinionated folder structure
+- ✅ Typed `chrome.storage` utilities included
+
+---
+
+## 🤝 Contributing
+
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for development setup and contribution guidelines.
 
 ---
 

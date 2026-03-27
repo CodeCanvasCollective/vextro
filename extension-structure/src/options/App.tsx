@@ -1,48 +1,72 @@
-// src/options/App.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getStorageValue, setStorageValue } from '../utils/storage';
 
 export default function App() {
-  const [configName, setConfigName] = useState('');
-  const [configs, setConfigs] = useState<string[]>(['Default']);
+  const [greeting, setGreeting] = useState('Hello from Vextro!');
+  const [saved, setSaved] = useState(false);
 
-  const addConfig = () => {
-    if (configName.trim()) {
-      setConfigs([...configs, configName.trim()]);
-      setConfigName('');
-    }
+  useEffect(() => {
+    getStorageValue<string>('greeting', 'Hello from Vextro!').then(setGreeting);
+  }, []);
+
+  const handleSave = async () => {
+    await setStorageValue('greeting', greeting);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 text-gray-900">
-      <h1 className="text-2xl font-bold mb-4">Vextro Extension Options</h1>
+    <div className="min-h-screen bg-gray-100 p-8 text-gray-900 font-sans">
+      <div className="max-w-xl mx-auto">
+        <h1 className="text-2xl font-bold mb-6">Vextro Extension Settings</h1>
 
-      <div className="mb-6">
-        <label className="block mb-1 font-medium">New Config Name:</label>
-        <input
-          type="text"
-          value={configName}
-          onChange={(e) => setConfigName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded"
-          placeholder="e.g., MyCustomConfig"
-        />
+        {/* Greeting Setting */}
+        <div className="bg-white rounded-lg shadow p-6 mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Greeting Message
+          </label>
+          <input
+            type="text"
+            value={greeting}
+            onChange={(e) => setGreeting(e.target.value)}
+            className="w-full p-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            placeholder="Enter your greeting..."
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            This greeting appears in the popup. It's stored using chrome.storage.sync.
+          </p>
+        </div>
+
+        {/* Save Button */}
         <button
-          onClick={addConfig}
-          className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          onClick={handleSave}
+          className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition-colors text-white px-6 py-2.5 rounded-md font-medium"
         >
-          Add Config
+          Save Settings
         </button>
-      </div>
 
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Available Configs:</h2>
-        <ul className="bg-white rounded shadow p-4 space-y-2">
-          {configs.map((cfg, idx) => (
-            <li key={idx} className="flex justify-between items-center">
-              <span>{cfg}</span>
-              <button className="text-sm text-red-600 hover:underline">Delete</button>
-            </li>
-          ))}
-        </ul>
+        {saved && (
+          <span className="ml-3 text-green-600 text-sm font-medium">
+            ✔ Saved successfully!
+          </span>
+        )}
+
+        {/* Info */}
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h2 className="text-sm font-semibold text-blue-800 mb-1">About Vextro</h2>
+          <p className="text-sm text-blue-700">
+            This extension was scaffolded with{' '}
+            <a
+              href="https://github.com/lasalasa/vextro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              create-vextro
+            </a>
+            . Edit this page in <code className="bg-blue-100 px-1 rounded">src/options/App.tsx</code>.
+          </p>
+        </div>
       </div>
     </div>
   );

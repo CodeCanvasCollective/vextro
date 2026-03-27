@@ -1,17 +1,32 @@
 # Exclude local dev and build files
 node_modules/
-dist/
 .vscode/
 .env
 *.log
 *.tsbuildinfo
 .DS_Store
 
-# Exclude test files (if any)
-__tests__/
+# Exclude test files
+tests/
 coverage/
 *.test.ts
 *.spec.ts
+vitest.config.ts
+
+# Exclude source (compiled to dist/)
+src/
+
+# Exclude config files
+tsconfig.json
+tsup.config.ts
+eslint.config.js
+.prettierrc
+.prettierignore
+
+# Exclude CI/CD and docs
+.github/
+.changeset/
+docs/
 
 # Exclude backup and editor-specific files
 *.swp
@@ -19,12 +34,6 @@ coverage/
 .idea/
 *.bak
 
-# Exclude CLI source if compiled version is used
-src/
-tsconfig.json
-vite.config.ts
-README-draft.md
-
 # Include only the compiled CLI and templates
-!cli.js
+!dist/
 !extension-structure/
