@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createCli } from '../../src/cli';
+import pkg from '../../package.json' with { type: 'json' };
 
 describe('CLI', () => {
   it('should create a program with correct name', () => {
@@ -9,7 +10,7 @@ describe('CLI', () => {
 
   it('should have version set', () => {
     const program = createCli();
-    expect(program.version()).toBe('0.1.0');
+    expect(program.version()).toBe(pkg.version);
   });
 
   it('should have the create command', () => {
