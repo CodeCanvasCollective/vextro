@@ -60,12 +60,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/lasalasa/vextro"
+    "url": "https://github.com/CodeCanvasCollective/vextro.git"
   },
   "author": "Lasantha <lasanthaslakmal@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lasalasa/vextro/issues"
+    "url": "https://github.com/CodeCanvasCollective/vextro/issues"
   },
-  "homepage": "https://github.com/lasalasa/vextro#readme"
+  "homepage": "https://github.com/CodeCanvasCollective/vextro#readme"
 }
