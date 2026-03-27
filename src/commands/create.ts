@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import path from 'node:path';
 import fs from 'fs-extra';
-import { promptProjectName } from '../prompts/index.js';
+import { promptProjectName, promptBrowser } from '../prompts/index.js';
 import { ExtensionGenerator } from '../generators/extension.js';
 import {
   validateProjectName,
@@ -11,12 +11,15 @@ import {
   newLine,
   banner,
 } from '../utils/index.js';
-import type { CreateOptions, ProjectConfig } from '../types/index.js';
+import { DEFAULT_BROWSER, BROWSERS } from '../constants.js';
+import type { CreateOptions, ProjectConfig, BrowserTarget } from '../types/index.js';
 
 export function createCommand(): Command {
   const cmd = new Command('create')
-    .description('Create a new Chrome extension project')
+    .description('Create a new browser extension project')
     .argument('[project-name]', 'Name of the extension project')
+    .option('--chrome', 'Target Chrome / Edge (default)')
+    .option('--firefox', 'Target Firefox')
     .option('--force', 'Overwrite existing directory')
     .action(async (projectName: string | undefined, options: CreateOptions) => {
       try {
@@ -28,6 +31,12 @@ export function createCommand(): Command {
     });
 
   return cmd;
+}
+
+function resolveBrowserFromFlags(options: CreateOptions): BrowserTarget | null {
+  if (options.chrome) return 'chrome';
+  if (options.firefox) return 'firefox';
+  return null;
 }
 
 async function handleCreate(
@@ -45,6 +54,12 @@ async function handleCreate(
     throw new Error(nameValidation);
   }
 
+  // Resolve browser target
+  let browser = resolveBrowserFromFlags(options);
+  if (!browser) {
+    browser = await promptBrowser();
+  }
+
   const targetDir = path.resolve(process.cwd(), projectName);
 
   // Check if directory already exists
@@ -60,10 +75,13 @@ async function handleCreate(
   const config: ProjectConfig = {
     name: projectName,
     targetDir,
+    browser,
   };
 
+  const browserMeta = BROWSERS[browser];
+
   newLine();
-  banner(`🚀 Creating Vextro Chrome Extension "${config.name}"...`);
+  banner(`🚀 Creating Vextro Extension for ${browserMeta.displayName} — "${config.name}"...`);
   newLine();
 
   // Handle SIGINT — clean up partial directory
@@ -88,11 +106,25 @@ async function handleCreate(
   process.removeListener('SIGINT', cleanup);
 
   newLine();
-  success(`Vextro project "${config.name}" created successfully! 🎉`);
+  success(`Vextro project "${config.name}" created successfully for ${browserMeta.displayName}! 🎉`);
   newLine();
   console.log('Next steps:');
   console.log(`  cd ${config.name}`);
   console.log('  npm run dev');
+  newLine();
+
+  if (browser === 'chrome') {
+    console.log('Load extension:');
+    console.log('  1. Open chrome://extensions (or edge://extensions)');
+    console.log('  2. Enable "Developer mode"');
+    console.log('  3. Click "Load unpacked" → select the dist/ folder');
+  } else if (browser === 'firefox') {
+    console.log('Load extension:');
+    console.log('  1. Open about:debugging#/runtime/this-firefox');
+    console.log('  2. Click "Load Temporary Add-on"');
+    console.log('  3. Select any file in the dist/ folder');
+  }
+
   newLine();
   console.log('Happy coding! 🚀');
   newLine();

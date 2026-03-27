@@ -2,24 +2,26 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import fs from 'fs-extra';
 import { getTemplatesDir, spinner, success, debug } from '../utils/index.js';
-import { FILES_TO_REMOVE } from '../constants.js';
+import { FILES_TO_REMOVE, CHROME_DEV_DEPS, FIREFOX_DEV_DEPS } from '../constants.js';
 import type { ProjectConfig } from '../types/index.js';
 
 export class ExtensionGenerator {
   private config: ProjectConfig;
-  private templateDir: string;
+  private templatesDir: string;
 
   constructor(config: ProjectConfig) {
     this.config = config;
-    this.templateDir = getTemplatesDir();
+    this.templatesDir = getTemplatesDir();
   }
 
   async generate(): Promise<void> {
     await this.scaffoldVite();
     await this.installBaseDeps();
     await this.cleanViteDefaults();
-    await this.copyExtensionStructure();
+    await this.copySharedFiles();
+    await this.copyBrowserFiles();
     await this.overrideConfigs();
+    await this.patchTsConfig();
     await this.injectProjectName();
     await this.installExtensionDeps();
   }
@@ -69,7 +71,6 @@ export class ExtensionGenerator {
       }
     }
 
-    // Clean up default public folder
     const publicPath = path.join(this.config.targetDir, 'public');
     if (await fs.pathExists(publicPath)) {
       await fs.emptyDir(publicPath);
@@ -79,54 +80,121 @@ export class ExtensionGenerator {
     success('Cleaned default Vite template files');
   }
 
-  private async copyExtensionStructure(): Promise<void> {
-    const s = spinner('Copying extension structure into project...');
+  private async copySharedFiles(): Promise<void> {
+    const s = spinner('Copying shared extension files...');
     s.start();
 
-    await fs.copy(
-      path.join(this.templateDir, 'src'),
-      path.join(this.config.targetDir, 'src'),
-    );
-    await fs.copy(
-      path.join(this.templateDir, 'public'),
-      path.join(this.config.targetDir, 'public'),
-    );
+    const sharedDir = path.join(this.templatesDir, 'shared');
+
+    // Copy shared src files (popup, options, utils, styles)
+    const sharedSrcDir = path.join(sharedDir, 'src');
+    if (await fs.pathExists(sharedSrcDir)) {
+      await fs.copy(sharedSrcDir, path.join(this.config.targetDir, 'src'));
+    }
+
+    // Copy shared public files (icons)
+    const sharedPublicDir = path.join(sharedDir, 'public');
+    if (await fs.pathExists(sharedPublicDir)) {
+      await fs.copy(sharedPublicDir, path.join(this.config.targetDir, 'public'));
+    }
 
     s.stop();
-    success('Copied extension structure');
+    success('Copied shared extension files');
+  }
+
+  private async copyBrowserFiles(): Promise<void> {
+    const s = spinner(`Copying ${this.config.browser} browser files...`);
+    s.start();
+
+    const browserDir = path.join(this.templatesDir, this.config.browser);
+
+    // Copy browser-specific src files (manifest, background, content)
+    const browserSrcDir = path.join(browserDir, 'src');
+    if (await fs.pathExists(browserSrcDir)) {
+      await fs.copy(browserSrcDir, path.join(this.config.targetDir, 'src'), {
+        overwrite: true,
+      });
+    }
+
+    s.stop();
+    success(`Copied ${this.config.browser} browser files`);
   }
 
   private async overrideConfigs(): Promise<void> {
     const s = spinner('Overriding config files...');
     s.start();
 
-    const rootFiles = ['vite.config.ts'];
-    for (const file of rootFiles) {
-      const from = path.join(this.templateDir, file);
-      const to = path.join(this.config.targetDir, file);
-      if (await fs.pathExists(from)) {
-        await fs.copy(from, to, { overwrite: true });
-        debug(`Overrode: ${file}`);
-      }
+    const browserDir = path.join(this.templatesDir, this.config.browser);
+    const viteConfigFrom = path.join(browserDir, 'vite.config.ts');
+    const viteConfigTo = path.join(this.config.targetDir, 'vite.config.ts');
+
+    if (await fs.pathExists(viteConfigFrom)) {
+      await fs.copy(viteConfigFrom, viteConfigTo, { overwrite: true });
+      debug('Overrode: vite.config.ts');
     }
 
     s.stop();
     success('Overrode config files');
   }
 
+  private async patchTsConfig(): Promise<void> {
+    const s = spinner('Patching tsconfig for extension types...');
+    s.start();
+
+    const tsconfigAppPath = path.join(this.config.targetDir, 'tsconfig.app.json');
+
+    if (await fs.pathExists(tsconfigAppPath)) {
+      let content = await fs.readFile(tsconfigAppPath, 'utf-8');
+
+      // Both Chrome and Firefox use @types/chrome (Firefox MV3 supports chrome.* namespace)
+      const typeToAdd = 'chrome';
+
+      // Inject the type into the "types" array using string replacement
+      // This preserves comments and formatting in the JSONC file
+      content = content.replace(
+        /("types"\s*:\s*\[)([\s\S]*?)(\])/,
+        (match, prefix, existing, suffix) => {
+          const trimmed = existing.trim();
+          if (trimmed.includes(`"${typeToAdd}"`)) return match; // already present
+          if (trimmed.length === 0) {
+            return `${prefix}"${typeToAdd}"${suffix}`;
+          }
+          return `${prefix}${existing.trimEnd()}, "${typeToAdd}"${suffix}`;
+        },
+      );
+
+      await fs.writeFile(tsconfigAppPath, content, 'utf-8');
+      debug(`Patched tsconfig.app.json with type: ${typeToAdd}`);
+    }
+
+    s.stop();
+    success('Patched tsconfig for extension types');
+  }
+
   private async injectProjectName(): Promise<void> {
     const s = spinner('Injecting project name...');
     s.start();
 
-    const manifestPath = path.join(this.config.targetDir, 'src', 'manifest.ts');
-    const pkgPath = path.join(this.config.targetDir, 'package.json');
-
-    if (await fs.pathExists(manifestPath)) {
-      let manifest = await fs.readFile(manifestPath, 'utf-8');
-      manifest = manifest.replace(/__EXT_NAME__/g, this.config.name);
-      await fs.writeFile(manifestPath, manifest, 'utf-8');
+    if (this.config.browser === 'chrome') {
+      // Chrome uses manifest.ts
+      const manifestPath = path.join(this.config.targetDir, 'src', 'manifest.ts');
+      if (await fs.pathExists(manifestPath)) {
+        let manifest = await fs.readFile(manifestPath, 'utf-8');
+        manifest = manifest.replace(/__EXT_NAME__/g, this.config.name);
+        await fs.writeFile(manifestPath, manifest, 'utf-8');
+      }
+    } else if (this.config.browser === 'firefox') {
+      // Firefox uses manifest.json
+      const manifestPath = path.join(this.config.targetDir, 'src', 'manifest.json');
+      if (await fs.pathExists(manifestPath)) {
+        let manifest = await fs.readFile(manifestPath, 'utf-8');
+        manifest = manifest.replace(/__EXT_NAME__/g, this.config.name);
+        await fs.writeFile(manifestPath, manifest, 'utf-8');
+      }
     }
 
+    // Update package.json name
+    const pkgPath = path.join(this.config.targetDir, 'package.json');
     if (await fs.pathExists(pkgPath)) {
       let pkg = await fs.readFile(pkgPath, 'utf-8');
       pkg = pkg.replace(/"__EXT_NAME__"/g, `"${this.config.name}"`);
@@ -138,15 +206,18 @@ export class ExtensionGenerator {
   }
 
   private async installExtensionDeps(): Promise<void> {
-    const s = spinner('Installing Chrome extension dev dependencies...');
+    const deps =
+      this.config.browser === 'firefox' ? FIREFOX_DEV_DEPS : CHROME_DEV_DEPS;
+
+    const s = spinner(`Installing ${this.config.browser} extension dev dependencies...`);
     s.start();
     try {
-      execSync(
-        'npm install --save-dev @types/chrome @types/node @crxjs/vite-plugin tailwindcss @tailwindcss/vite',
-        { cwd: this.config.targetDir, stdio: 'pipe' },
-      );
+      execSync(`npm install --save-dev ${deps.join(' ')}`, {
+        cwd: this.config.targetDir,
+        stdio: 'pipe',
+      });
       s.stop();
-      success('Installed Chrome extension dev dependencies');
+      success(`Installed ${this.config.browser} extension dev dependencies`);
     } catch (err) {
       s.stop();
       throw new Error(

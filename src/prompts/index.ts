@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
-import { DEFAULT_PROJECT_NAME } from '../constants.js';
+import { DEFAULT_PROJECT_NAME, BROWSERS } from '../constants.js';
 import { validateProjectName } from '../utils/index.js';
+import type { BrowserTarget } from '../types/index.js';
 
 export async function promptProjectName(): Promise<string> {
   const { projectName } = await inquirer.prompt([
@@ -15,4 +16,20 @@ export async function promptProjectName(): Promise<string> {
     },
   ]);
   return projectName;
+}
+
+export async function promptBrowser(): Promise<BrowserTarget> {
+  const { browser } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'browser',
+      message: 'Select target browser:',
+      choices: Object.entries(BROWSERS).map(([value, meta]) => ({
+        name: `${meta.displayName} — ${meta.description}`,
+        value,
+      })),
+      default: 'chrome',
+    },
+  ]);
+  return browser;
 }

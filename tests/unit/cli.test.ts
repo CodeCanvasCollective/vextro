@@ -16,12 +16,26 @@ describe('CLI', () => {
     const program = createCli();
     const createCmd = program.commands.find((cmd) => cmd.name() === 'create');
     expect(createCmd).toBeDefined();
-    expect(createCmd?.description()).toBe('Create a new Chrome extension project');
+    expect(createCmd?.description()).toBe('Create a new browser extension project');
   });
 
   it('should have --verbose option', () => {
     const program = createCli();
     const verboseOpt = program.options.find((opt) => opt.long === '--verbose');
     expect(verboseOpt).toBeDefined();
+  });
+
+  it('create command should have --chrome flag', () => {
+    const program = createCli();
+    const createCmd = program.commands.find((cmd) => cmd.name() === 'create');
+    const chromeOpt = createCmd?.options.find((opt) => opt.long === '--chrome');
+    expect(chromeOpt).toBeDefined();
+  });
+
+  it('create command should have --firefox flag', () => {
+    const program = createCli();
+    const createCmd = program.commands.find((cmd) => cmd.name() === 'create');
+    const firefoxOpt = createCmd?.options.find((opt) => opt.long === '--firefox');
+    expect(firefoxOpt).toBeDefined();
   });
 });

@@ -14,7 +14,7 @@ export function getTemplatesDir(): string {
   const projectRoot = isBundled
     ? path.resolve(__dirname, '..')
     : path.resolve(__dirname, '..', '..');
-  return path.resolve(projectRoot, 'extension-structure');
+  return path.resolve(projectRoot, 'src', 'templates');
 }
 
 export async function createDir(dirPath: string): Promise<void> {

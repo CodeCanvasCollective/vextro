@@ -41,11 +41,13 @@
   },
   "files": [
     "dist",
-    "extension-structure/"
+    "src/templates"
   ],
   "keywords": [
     "vite",
     "chrome-extension",
+    "firefox-extension",
+    "browser-extension",
     "vite-plugin",
     "react",
     "tailwind",

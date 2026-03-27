@@ -7,7 +7,7 @@ export function createCli(): Command {
 
   program
     .name('create-vextro')
-    .description('Scaffold modern Chrome extensions with Vite + React + Tailwind')
+    .description('Scaffold modern browser extensions with Vite + React + Tailwind')
     .version('0.1.0')
     .option('--verbose', 'Enable verbose output')
     .hook('preAction', (thisCommand) => {

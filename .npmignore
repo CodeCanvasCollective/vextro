@@ -36,4 +36,4 @@ docs/
 
 # Include only the compiled CLI and templates
 !dist/
-!extension-structure/
+!src/templates/
