@@ -30,7 +30,7 @@ export class ExtensionGenerator {
     const s = spinner('Creating base Vite + React + TS project...');
     s.start();
     try {
-      execSync(`npm create vite@latest ${this.config.name} -- --template react-ts`, {
+      execSync(`npm exec --yes -- create-vite@latest ${this.config.name} --template react-ts`, {
         cwd: path.dirname(this.config.targetDir),
         stdio: 'pipe',
         maxBuffer: 10 * 1024 * 1024,
