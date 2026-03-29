@@ -53,7 +53,7 @@ export default function App() {
           <p className="text-sm text-blue-700">
             This extension was scaffolded with{' '}
             <a
-              href="https://github.com/lasalasa/vextro"
+              href="https://github.com/CodeCanvasCollective/vextro"
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
