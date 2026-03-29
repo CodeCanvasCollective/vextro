@@ -1,6 +1,6 @@
 {
   "name": "create-vextro",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Scaffold modern browser extensions (Chrome, Edge, Firefox) with Vite + React + Tailwind",
   "type": "module",
   "bin": {
